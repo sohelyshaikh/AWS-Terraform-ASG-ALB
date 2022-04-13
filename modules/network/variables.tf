@@ -1,11 +1,9 @@
 variable "vpc_cidr" {}
 
 variable "public_cidrs" {
-  type = "list"
+  type = list(string)
 }
 
 variable "private_cidrs" {
-  type = "list"
+  type = list(string)
 }
-
-variable "transit_gateway" {}

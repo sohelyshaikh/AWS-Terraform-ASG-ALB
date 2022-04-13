@@ -21,54 +21,61 @@ resource "aws_launch_configuration" "my-launch-config" {
   lifecycle {
     create_before_destroy = true
   }
-  
-  tags=merge(
-  locals.default_tags,
-  {"Name"="${locals.name_prefix}-ASG-LaunchConfig"}
-  )
-  
+
+
+
 }
 
 
 
 resource "aws_autoscaling_group" "example" {
-  launch_configuration = "${aws_launch_configuration.my-launch-config.name}"
-  vpc_zone_identifier  = ["${var.subnet1}","${var.subnet2 }"]
+  launch_configuration = aws_launch_configuration.my-launch-config.name
+  vpc_zone_identifier  = ["${var.subnet1}", "${var.subnet2}", "${var.subnet3}"]
   target_group_arns    = ["${var.target_group_arn}"]
   health_check_type    = "ELB"
 
   min_size = var.minsize
   max_size = var.maxsize
 
+
+   tag {
+    key                 = "Name"
+    value               = "${local.name_prefix}-ASG" 
+    propagate_at_launch = true
+  }
   
-  tags=merge(
-  locals.default_tags,
-  {"Name"="${locals.name_prefix}-ASG"}
-  )
+#   on main.tf line 41, in resource "aws_autoscaling_group" "example":
+# │   41:   tags = merge(
+# │   42:     local.default_tags,
+# │   43:     { "Name" = "${local.name_prefix}-ASG" }
+# │   44:   )
+# │     ├────────────────
+# │     │ local.default_tags is object with 1 attribute "Env"
+# │     │ local.name_prefix is "default-Group20-Sohel"
+# │ 
+# │ Inappropriate value for attribute "tags": set of map of string required.
 }
 
 resource "aws_security_group" "my-asg-sg" {
-  
-  vpc_id = "${var.vpc_id}"
-  
-  ingress{
-      from_port         = 80
-  protocol          = "tcp"
-  to_port           = 80
-  type              = "ingress"
-  cidr_blocks       = ["0.0.0.0/0"]
+
+  vpc_id = var.vpc_id
+
+  ingress {
+    from_port   = 80
+    protocol    = "tcp"
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
   }
-  egress{
-      from_port         = 0
-  protocol          = "-1"
-  to_port           = 0
-  type              = "egress"
-  cidr_blocks       = ["0.0.0.0/0"]
+  egress {
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
   }
-  
-  tags=merge(
-  locals.default_tags,
-  {"Name"="${locals.name_prefix}-ASG-SG"}
+
+  tags = merge(
+    local.default_tags,
+    { "Name" = "${local.name_prefix}-ASG-SG" }
   )
 }
 

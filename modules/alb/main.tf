@@ -14,20 +14,20 @@ resource "aws_lb_target_group" "my-target-group" {
     unhealthy_threshold = 2
   }
 
-  
+
   port        = 80
   protocol    = "HTTP"
   target_type = "instance"
   vpc_id      = var.vpc_id
 
   tags = merge(
-    locals.default_tags, { "Name" = "${locals.name_prefix}-ALB-TG" }
+    local.default_tags, { "Name" = "${local.name_prefix}-ALB-TG" }
   )
 }
 
 
 resource "aws_lb" "my-alb" {
-  name     = "my-test-alb"
+  // name     = "my-test-alb"
   internal = false
 
   security_groups = [
@@ -37,13 +37,14 @@ resource "aws_lb" "my-alb" {
   subnets = [
     "${var.subnet1}",
     "${var.subnet2}",
+    "${var.subnet3}"
   ]
 
   ip_address_type    = "ipv4"
   load_balancer_type = "application"
   tags = merge(
-    locals.default_tags,
-    { "Name" = "${locals.name_prefix}-ALB-TG" }
+    local.default_tags,
+    { "Name" = "${local.name_prefix}-ALB-TG" }
   )
 
 }
@@ -59,8 +60,8 @@ resource "aws_lb_listener" "my-alb-listner" {
   }
 
   tags = merge(
-    locals.default_tags,
-    { "Name" = "${locals.name_prefix}-ALB-Listner" }
+    local.default_tags,
+    { "Name" = "${local.name_prefix}-ALB-Listner" }
   )
 
 }
@@ -74,7 +75,6 @@ resource "aws_security_group" "my-alb-sg" {
     protocol  = "tcp"
 
     to_port     = 80
-    type        = "ingress"
     cidr_blocks = ["0.0.0.0/0"]
   }
   egress {
@@ -82,13 +82,12 @@ resource "aws_security_group" "my-alb-sg" {
     protocol  = "-1"
 
     to_port     = 0
-    type        = "egress"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = merge(
-    locals.default_tags,
-  { "Name" = "${locals.name_prefix}-ALB-SG" })
+    local.default_tags,
+  { "Name" = "${local.name_prefix}-ALB-SG" })
 
 }
 
