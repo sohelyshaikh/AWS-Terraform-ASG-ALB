@@ -45,17 +45,6 @@ resource "aws_autoscaling_group" "example" {
     value               = "${local.name_prefix}-ASG" 
     propagate_at_launch = true
   }
-  
-#   on main.tf line 41, in resource "aws_autoscaling_group" "example":
-# │   41:   tags = merge(
-# │   42:     local.default_tags,
-# │   43:     { "Name" = "${local.name_prefix}-ASG" }
-# │   44:   )
-# │     ├────────────────
-# │     │ local.default_tags is object with 1 attribute "Env"
-# │     │ local.name_prefix is "default-Group20-Sohel"
-# │ 
-# │ Inappropriate value for attribute "tags": set of map of string required.
 }
 
 resource "aws_security_group" "my-asg-sg" {
@@ -67,6 +56,12 @@ resource "aws_security_group" "my-asg-sg" {
     protocol    = "tcp"
     to_port     = 80
     cidr_blocks = ["0.0.0.0/0"]
+  }
+  ingress {
+    from_port   = 0
+    protocol    = "-1"
+    to_port     = 0
+    security_groups = [var.lb_sg]
   }
   egress {
     from_port   = 0

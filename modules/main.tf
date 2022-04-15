@@ -27,6 +27,7 @@ module "asg" {
   target_group_arn = module.alb.alb_target_group_arn
   maxsize          = var.max
   minsize          = var.min
+  lb_sg = module.alb.lb_sg
 }
 # variable "vpc"{
 

@@ -9,3 +9,5 @@ variable "subnet2" {}
 variable "subnet3" {}
 variable "minsize" {}
 variable "maxsize" {}
+
+variable "lb-sg" {}
