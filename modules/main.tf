@@ -28,6 +28,7 @@ module "asg" {
   maxsize          = var.max
   minsize          = var.min
   lb_sg = module.alb.lb_sg
+  //bastion_sg = module.network.bastion_sg
 }
 # variable "vpc"{
 

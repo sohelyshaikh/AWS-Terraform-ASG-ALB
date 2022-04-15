@@ -10,4 +10,4 @@ variable "subnet3" {}
 variable "minsize" {}
 variable "maxsize" {}
 
-variable "lb-sg" {}
+variable "lb_sg" {}
