@@ -155,32 +155,3 @@ resource "aws_nat_gateway" "my-test-nat-gateway" {
     Name="${local.name_prefix}-NatGW"
   }
 }
-
-data "aws_ami" "latest_amazon_linux" {
-  owners      = ["amazon"]
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
-  }
-}
-
-resource "aws_instance" "bastion" {
-  #count  = length(data.terraform_remote_state.network.outputs.private_subnet_ids)
-  ami                         = data.aws_ami.latest_amazon_linux.id
-  instance_type               = "t2.micro"
-  key_name                    = aws_key_pair.bastion_key.key_name
-  subnet_id                   = aws_subnet.public_subnet.0.id
-  security_groups             = [aws_security_group.test_sg.id]
-  associate_public_ip_address = true
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  tags = merge(local.default_tags,
-    {
-      "Name" = "${local.name_prefix}-Bastion"
-    }
-  )
-}

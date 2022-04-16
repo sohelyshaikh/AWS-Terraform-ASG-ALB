@@ -5,8 +5,9 @@ locals {
 }
 
 resource "aws_lb_target_group" "my-target-group" {
+  name = "${local.name_prefix}-TG"
   health_check {
-    interval            = 10
+    interval            = 30
     path                = "/"
     protocol            = "HTTP"
     timeout             = 5
@@ -27,7 +28,7 @@ resource "aws_lb_target_group" "my-target-group" {
 
 
 resource "aws_lb" "my-alb" {
-  // name     = "my-test-alb"
+  name     = "${local.name_prefix}-ALB"
   internal = false
 
   security_groups = [
@@ -67,7 +68,7 @@ resource "aws_lb_listener" "my-alb-listner" {
 }
 
 resource "aws_security_group" "my-alb-sg" {
-  name   = "my-alb-sg"
+  name   = "${local.name_prefix}-alb-sg"
   vpc_id = var.vpc_id
 
   ingress {
