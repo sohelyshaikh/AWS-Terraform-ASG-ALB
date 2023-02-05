@@ -1,4 +1,4 @@
-## Mini Poject to demonstrate AWS AutoScaling Group and Applicatoin LoadBalancer.
+## Mini Project to demonstrate AWS AutoScaling Group and Applicatoin LoadBalancer.
 
 ***
 1. Terraform
